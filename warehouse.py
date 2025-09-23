@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import robot, quadrotor, differential_drive, humanoid
+from robot import differential_drive, quadrotor, humanoid
 
 class warehouse:
     robots = []
