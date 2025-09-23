@@ -3,19 +3,19 @@ from robot import differential_drive, quadrotor, humanoid
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-# --- Setup ---
+# Setup 
 gridSize = 5
 numRobots = 10
 warehouseobj = warehouse(gridSize, numRobots)
 
-# --- Color mapping for robot types ---
+# Color mapping for robot types 
 type_colors = {
     "quadrotor": "red",
     "differential_drive": "green",
     "humanoid": "blue"
 }
 
-# --- Setup the plot ---
+# Setup the plot
 fig, ax = plt.subplots(figsize=(12, 8))  # Larger plot for better clarity
 ax.set_xlim(-0.5, gridSize - 0.5)
 ax.set_ylim(-0.5, gridSize - 0.5)
@@ -24,7 +24,7 @@ ax.set_yticks(range(gridSize))
 ax.grid(True)
 ax.set_title("Robot Grid Navigation", fontsize=14)
 
-# --- Static goal positions ---
+# Static goal positions 
 goal_scat = ax.scatter(
     [r.goal_pos[0] for r in warehouseobj.robots],
     [r.goal_pos[1] for r in warehouseobj.robots],
@@ -32,7 +32,7 @@ goal_scat = ax.scatter(
     marker="s", s=100, label="Goals"
 )
 
-# --- Update function ---
+# Update function 
 def update(frame):
     ax.clear()
     ax.set_xlim(-0.5, gridSize - 0.5)
@@ -76,6 +76,7 @@ def update(frame):
     ]
     ax.legend(handles=legend_elements, loc='center left', bbox_to_anchor=(1, 0.5))
 
-# --- Run animation ---
+# Run animation 
 anim = FuncAnimation(fig, update, frames=30, interval=3000, blit=False, repeat=False)
 plt.show()
+
