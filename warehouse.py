@@ -26,13 +26,9 @@ class warehouse:
     def timeStep(self):
         takeStep = False
         for i in range(0, self.numRobots):
-            if (self.robots[i].reached_goal):
-                continue
             currDist = self.robots[i].distance_to_goal()
             takeStep = True
             for j in range(i,self.numRobots):
-                if (self.robots[i].reached_goal):
-                    continue
                 if self.robots[i] is quadrotor and (not self.robots[j] is quadrotor):
                     continue
                 if (self.robots[j].next_step == self.robots[i].next_step):
@@ -41,3 +37,5 @@ class warehouse:
                         takeStep = False
                         break
             if (takeStep): self.robots[i].take_step()
+        
+        self.robots = [robot for robot in self.robots if not robot.reached_goal()]
