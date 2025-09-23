@@ -1,6 +1,6 @@
 import numpy as np
 import random
-import robot
+import robot, quadrotor, differential_drive, humanoid
 
 class warehouse:
     robots = []
@@ -10,7 +10,6 @@ class warehouse:
         self.gridSize = gridSize
         self.grid = [[0] * gridSize]*gridSize
         for i in range(0, numRobots):
-            #Get a random position and regenerate if not
             startX,startY = random.randint(1, gridSize), random.randint(1, gridSize)
             while (gridSize[startX][startY]):
                 startX,startY = random.randint(1, gridSize), random.randint(1, gridSize)
@@ -25,12 +24,20 @@ class warehouse:
                 self.robots.append(humanoid((startX,startY), (goalX,goalY)))
 
     def timeStep(self):
-        nextSteps = []
-        for i in self.robots:
-            nextSteps.append(i.next_step)
-        for i in self.robots:
-        
-            
-
-        
-
+        takeStep = False
+        for i in range(0, self.numRobots):
+            if (self.robots[i].reached_goal):
+                continue
+            currDist = self.robots[i].distance_to_goal()
+            takeStep = True
+            for j in range(i,self.numRobots):
+                if (self.robots[i].reached_goal):
+                    continue
+                if self.robots[i] is quadrotor and (not self.robots[j] is quadrotor):
+                    continue
+                if (self.robots[j].next_step == self.robots[i].next_step):
+                    jDist = self.robots[j].distance_to_goal()
+                    if (currDist < jDist):
+                        takeStep = False
+                        break
+            if (takeStep): self.robots[i].take_step()
