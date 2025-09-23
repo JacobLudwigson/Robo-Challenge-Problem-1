@@ -2,7 +2,7 @@ class robot:
     def __init__(self, start_pos: tuple[int, int], goal_pos: tuple[int, int]) -> None:
         self.current_pos: tuple[int, int] = start_pos
         self.goal_pos: tuple[int, int] = goal_pos
-        self.next_step = self.__calculate_next_step()
+        self.next_step: tuple[int, int] = self.__calculate_next_step()
 
     def take_step(self) -> None:
         self.current_pos = self.next_step
@@ -12,7 +12,7 @@ class robot:
         return self.current_pos[0] == self.goal_pos[0] and self.current_pos[1] == self.goal_pos[1]
 
     def distance_to_goal(self) -> int:
-        return abs(self.current_pos[0] - self.goal_pos[0] + self.current_pos[1] - self.goal_pos[1])
+        return abs(self.current_pos[0] - self.goal_pos[0]) + abs(self.current_pos[1] - self.goal_pos[1])
     
     def __calculate_next_step(self) -> tuple[int, int]:
         if self.goal_pos[0] > self.current_pos[0]:
