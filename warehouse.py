@@ -39,6 +39,7 @@ class warehouse:
             if (takeStep): self.robots[i].take_step()
         
         self.robots = [robot for robot in self.robots if not robot.reached_goal()]
+        self.numRobots = len(self.robots)
 
 wh = warehouse(5,5)
 
