@@ -25,10 +25,15 @@ goal_scat = ax.scatter(
     [r.goal_pos[1] for r in warehouseobj.robots],
     c="red", marker="s", s=100
 )
+anim: FuncAnimation | None
 
 # --- Update function called every timestep ---
 def update(frame):
     warehouseobj.timeStep()  # move robots one step
+
+    if len(warehouseobj.robots) == 0 and not anim == None:
+      anim.event_source.stop()
+      return
 
     xs = [r.current_pos[0] for r in warehouseobj.robots]
     ys = [r.current_pos[1] for r in warehouseobj.robots]
