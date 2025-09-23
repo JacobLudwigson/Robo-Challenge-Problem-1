@@ -27,12 +27,14 @@ class robot:
 
 class quadrotor(robot):
     def __init__(self, start_pos: tuple[int, int], goal_pos: tuple[int, int]) -> None:
-        super(start_pos, goal_pos)
+        super().__init__(start_pos, goal_pos)
 
 class differential_drive(robot):
     def __init__(self, start_pos: tuple[int, int], goal_pos: tuple[int, int]) -> None:
-        super(start_pos, goal_pos)
+        super().__init__(start_pos, goal_pos)
+
 
 class humanoid(robot):
     def __init__(self, start_pos: tuple[int, int], goal_pos: tuple[int, int]) -> None:
-        super(start_pos, goal_pos)
+        super().__init__(start_pos, goal_pos)
+
