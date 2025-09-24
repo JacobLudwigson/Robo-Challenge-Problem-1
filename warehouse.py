@@ -14,7 +14,7 @@ class warehouse:
             while (self.grid[startX][startY]):
                 startX,startY = random.randint(0, gridSize-1), random.randint(0, gridSize-1)
             
-            goalX,goalY = random.randint(1, gridSize - 1), random.randint(1, gridSize - 1)
+            goalX,goalY = random.randint(0, gridSize - 1), random.randint(0, gridSize - 1)
             robotType = random.randint(1,3)
             if robotType == 1:
                 self.robots.append(quadrotor((startX,startY), (goalX,goalY)))
