@@ -42,15 +42,21 @@ class warehouse:
     def monitor(self):
         violations = []
 
-        # Compare every pair of robots
-        for i in range(self.numRobots):
-            for j in range(i + 1, self.numRobots):
-                r1, r2 = self.robots[i], self.robots[j]
+        while(True):
+            # Compare every pair of robots
+            for i in range(self.numRobots):
+                for j in range(i + 1, self.numRobots):
+                    r1, r2 = self.robots[i], self.robots[j]
 
-                # They share a position (potential collision)
-                if r1.current_pos == r2.current_pos:
-                    if self.willCollide(r1, r2):
-                        violations.append((r1, r2))
+                    # They share a position (potential collision)
+                    if r1.current_pos == r2.current_pos:
+                        if self.willCollide(r1, r2):
+                            violations.append((r1, r2))
+            if violations:
+                for r1, r2 in violations:
+                    r2.revert()
+            else:
+                break
 
         # Report results
         if violations:
