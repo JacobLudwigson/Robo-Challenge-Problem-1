@@ -141,16 +141,6 @@ class warehouse:
                         takeStep = bool(random.randint(0,1))
                         break
             if takeStep:
-                proposals.append(self.robots[i].next_step)
-            else:
-                proposals.append(self.robots[i].current_pos)
-
-        #Is there anyone that plans to wait on the square I want to go to, if so, Ill wait too.
-        for i in range (0, self.numRobots):
-            if proposals[i] == self.robots[i].next_step:
-                if proposals.count(proposals[i]) > 1:
-                    print("Overlapping proposals!")
-                    continue
                 self.robots[i].take_step()
         self.monitor()
         
