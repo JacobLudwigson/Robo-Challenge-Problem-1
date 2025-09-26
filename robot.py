@@ -3,8 +3,13 @@ class robot:
         self.current_pos: tuple[int, int] = start_pos
         self.goal_pos: tuple[int, int] = goal_pos
         self.next_step: tuple[int, int] = self.__calculate_next_step()
+        self.previous_pos: tuple[int, int] = start_pos
+
+    def revert(self) -> None:
+        self.current_pos = self.previous_pos
 
     def take_step(self) -> None:
+        self.previous_pos = self.current_pos
         self.current_pos = self.next_step
         self.next_step = self.__calculate_next_step()
     

@@ -3,10 +3,22 @@ from robot import differential_drive, quadrotor, humanoid
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
+def bonusPoints():
+    gridSize = 0
+    while (True):
+        print("Enter an integer grid size (3-10)")
+        strInput = input()
+        if (strInput.isnumeric()):
+            gridSize = int(strInput)
+            if ((gridSize >= 3 and gridSize <= 10)):
+                break
+        print("Invalid Input!")
+    numRobots = 2*gridSize
+    return gridSize,numRobots
 # Setup 
-gridSize = 5
-numRobots = 10
+gridSize, numRobots = bonusPoints()
 warehouseobj = warehouse(gridSize, numRobots)
+
 
 # Color mapping for robot types 
 type_colors = {
@@ -17,10 +29,10 @@ type_colors = {
 
 # Setup the plot
 fig, ax = plt.subplots(figsize=(12, 8))  # Larger plot for better clarity
-ax.set_xlim(-0.5, gridSize - 0.5)
-ax.set_ylim(-0.5, gridSize - 0.5)
-ax.set_xticks(range(gridSize))
-ax.set_yticks(range(gridSize))
+ax.set_xlim(-0.5, gridSize + 0.5)
+ax.set_ylim(-0.5, gridSize + 0.5)
+ax.set_xticks(range(gridSize+1))
+ax.set_yticks(range(gridSize+1))
 ax.grid(True)
 ax.set_title("Robot Grid Navigation", fontsize=14)
 
@@ -35,10 +47,10 @@ goal_scat = ax.scatter(
 # Update function 
 def update(frame):
     ax.clear()
-    ax.set_xlim(-0.5, gridSize - 0.5)
-    ax.set_ylim(-0.5, gridSize - 0.5)
-    ax.set_xticks(range(gridSize))
-    ax.set_yticks(range(gridSize))
+    ax.set_xlim(-0.5, gridSize + 0.5)
+    ax.set_ylim(-0.5, gridSize + 0.5)
+    ax.set_xticks(range(gridSize+1))
+    ax.set_yticks(range(gridSize+1))
     ax.grid(True)
     ax.set_title(f"Robot Grid Navigation — Timestep {frame}", fontsize=14)
 
