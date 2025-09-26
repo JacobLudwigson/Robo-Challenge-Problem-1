@@ -40,9 +40,8 @@ class warehouse:
         return False
 
     def monitor(self):
-        violations = []
-
         while(True):
+            violations = []
             # Compare every pair of robots
             for i in range(self.numRobots):
                 for j in range(i + 1, self.numRobots):
@@ -57,7 +56,6 @@ class warehouse:
                     r2.revert()
             else:
                 break
-
         # Report results
         if violations:
             print("Collision rule violations detected:")
@@ -152,5 +150,6 @@ class warehouse:
         
         self.robots = [robot for robot in self.robots if not robot.reached_goal()]
         self.numRobots = len(self.robots)
+
 
 # r = robot((5,5), (5,5))
