@@ -24,20 +24,38 @@ class warehouse:
                 self.robots.append(differential_drive((startX, startY), (goalX, goalY)))
             else:
                 self.robots.append(humanoid((startX, startY), (goalX, goalY)))
+    
+    def timeStep(self):
+        moveProposals: dict[tuple[int, int], list[robot]] = {}
+        for movingRobot in self.robots:
+            step = movingRobot.next_step
+
+            if not step in moveProposals:
+                moveProposals[step] = [movingRobot]
+            else:
+                robotsMoving = moveProposals[step]
+                robotsMoving.append(movingRobot)
+                moveProposals[step] = robotsMoving
+        
+        for move in moveProposals.keys():
+            if len(moveProposals[move]) == 1:
+                moveProposals[move][0].take_step()
+            else:
+                max = moveProposals[move][0]
+                for bot in moveProposals[move][1:]:
+                    if bot.distance_to_goal() > max.distance_to_goal():
+                        max = bot
+                max.take_step()
+
+        finished_bots = []
+        for bot in self.robots:
+            if bot.reached_goal():
+                finished_bots.append(bot)
+        self.robots = [bot for bot in self.robots if not bot in finished_bots]
+
 
     def willCollide(self, robot1, robot2):
-        type1, type2 = type(robot1).__name__, type(robot2).__name__
-
-        if type1 == "quadrotor" and type2 == "quadrotor":
-            return True
-        
-        if (type1 == "differential_drive" and type2 == "humanoid") or \
-        (type1 == "humanoid" and type2 == "differential_drive") or \
-        (type1 == "humanoid" and type2 == "humanoid") or \
-        (type1 == "differential_drive" and type2 == "differential_drive"):
-            return True
-
-        return False
+        return (type(robot1) is quadrotor and not type(robot2) is quadrotor) or (type(robot2) is quadrotor and not type(robot1) is quadrotor)
 
     def monitor(self):
         violations = []
@@ -115,46 +133,46 @@ class warehouse:
     #     self.monitor()
     #     self.robots = [r for r in self.robots if not r.reached_goal()]
     #     self.numRobots = len(self.robots)
-    def timeStep(self):
-        proposals = []
-        for i in range(0, self.numRobots):
-            currDist = self.robots[i].distance_to_goal()
-            takeStep = True
+    # def timeStep(self):
+    #     proposals = []
+    #     for i in range(0, self.numRobots):
+    #         currDist = self.robots[i].distance_to_goal()
+    #         takeStep = True
 
-            #Check "Has any other robot I will colide with beat me to this square on this timestep"
-            for k in range(0, i-1):
-                if (self.robots[k].current_pos == self.robots[i].next_step):
-                    if self.willCollide(self.robots[k], self.robots[i]):
-                        takeStep = False
-                        break
+    #         #Check "Has any other robot I will colide with beat me to this square on this timestep"
+    #         for k in range(0, i-1):
+    #             if (self.robots[k].current_pos == self.robots[i].next_step):
+    #                 if self.willCollide(self.robots[k], self.robots[i]):
+    #                     takeStep = False
+    #                     break
             
-            #Check "Can I take this square on this timestep or are there future robots that have a large distance that want to go here" 
-            for j in range(i+1,self.numRobots):
-                if (not self.willCollide(self.robots[j], self.robots[i])):
-                    continue
-                if (self.robots[j].next_step == self.robots[i].next_step):
-                    jDist = self.robots[j].distance_to_goal()
-                    if (currDist < jDist):
-                        takeStep = False
-                        break
-                    elif (currDist == jDist):
-                        takeStep = bool(random.randint(0,1))
-                        break
-            if takeStep:
-                proposals.append(self.robots[i].next_step)
-            else:
-                proposals.append(self.robots[i].current_pos)
+    #         #Check "Can I take this square on this timestep or are there future robots that have a large distance that want to go here" 
+    #         for j in range(i+1,self.numRobots):
+    #             if (not self.willCollide(self.robots[j], self.robots[i])):
+    #                 continue
+    #             if (self.robots[j].next_step == self.robots[i].next_step):
+    #                 jDist = self.robots[j].distance_to_goal()
+    #                 if (currDist < jDist):
+    #                     takeStep = False
+    #                     break
+    #                 elif (currDist == jDist):
+    #                     takeStep = bool(random.randint(0,1))
+    #                     break
+    #         if takeStep:
+    #             proposals.append(self.robots[i].next_step)
+    #         else:
+    #             proposals.append(self.robots[i].current_pos)
 
-        #Is there anyone that plans to wait on the square I want to go to, if so, Ill wait too.
-        for i in range (0, self.numRobots):
-            if proposals[i] == self.robots[i].next_step:
-                if proposals.count(proposals[i]) > 1:
-                    print("Overlapping proposals!")
-                    continue
-                self.robots[i].take_step()
-        self.monitor()
+    #     #Is there anyone that plans to wait on the square I want to go to, if so, Ill wait too.
+    #     for i in range (0, self.numRobots):
+    #         if proposals[i] == self.robots[i].next_step:
+    #             if proposals.count(proposals[i]) > 1:
+    #                 print("Overlapping proposals!")
+    #                 continue
+    #             self.robots[i].take_step()
+    #     self.monitor()
         
-        self.robots = [robot for robot in self.robots if not robot.reached_goal()]
-        self.numRobots = len(self.robots)
+    #     self.robots = [robot for robot in self.robots if not robot.reached_goal()]
+    #     self.numRobots = len(self.robots)
 
 # r = robot((5,5), (5,5))
